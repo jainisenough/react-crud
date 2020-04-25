@@ -1,0 +1,12 @@
+{
+  "[javascript]": {
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.tslint": true
+    },
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "prettier.configPath": "./.prettierrc.json",
+  "prettier.singleQuote": true,
+  "eslint.workingDirectories": ["./src"]
+}
