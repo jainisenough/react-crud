@@ -3,9 +3,11 @@ import createSagaMiddleware from 'redux-saga';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'localforage';
 import hardSet from 'redux-persist/lib/stateReconciler/hardSet';
+import saga from './saga';
 import reducer from './reducer';
 
-const middlewares = [createSagaMiddleware()];
+const sagaMiddleware = createSagaMiddleware();
+const middlewares = [sagaMiddleware];
 const enhancers = [applyMiddleware(...middlewares)];
 const persistedReducer = persistReducer(
   {
@@ -18,12 +20,16 @@ const persistedReducer = persistReducer(
 );
 
 export default async preloadedState => {
-  let composeFn = compose;
+  let composedEnhacer;
   if (process.env.NODE_ENV === 'development') {
     const { composeWithDevTools } = await import('redux-devtools-extension');
-    composeFn = composeWithDevTools;
+    composedEnhacer = composeWithDevTools(...enhancers);
+  } else {
+    composedEnhacer = compose(...enhancers);
   }
-  const store = createStore(persistedReducer, preloadedState, composeFn(...enhancers));
+  const store = createStore(persistedReducer, preloadedState, composedEnhacer);
   const persistor = persistStore(store);
+
+  sagaMiddleware.run(saga);
   return { store, persistor };
 };
