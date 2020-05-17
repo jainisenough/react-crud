@@ -1,4 +1,4 @@
-import React, { memo, lazy } from 'react';
+import React, { memo, Suspense, lazy } from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { Formik } from 'formik';
@@ -15,6 +15,7 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
+import Loading from 'component/loading';
 import storage from 'helper/storage';
 import { login } from 'action/user';
 import { ADMIN } from 'route-link';
@@ -103,13 +104,15 @@ const Login = ({ login }) => {
         </Formik>
       </div>
       <Box mt={8}>
-        <Copyright />
+        <Suspense fallback={<Loading />}>
+          <Copyright />
+        </Suspense>
       </Box>
     </Container>
   );
 };
 
-const mapDispatchToProps = (_dispatch) => ({
+const mapDispatchToProps = _dispatch => ({
   login: (username, password) => login(username, password)
 });
 

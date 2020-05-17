@@ -15,7 +15,7 @@ import useStyles from './style';
 
 const User = ({ getUsers, users }) => {
   const classes = useStyles();
-  
+
   useEffect(() => {
     if (_isEmpty(users.data)) {
       getUsers();
@@ -32,20 +32,25 @@ const User = ({ getUsers, users }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {users.data.map(row => (
-            <TableRow key={row.login}>
-              <TableCell><img alt="user-pic" className={classes.profilePic} src={row.avatar_url} /></TableCell>
-              <TableCell align="right">{row.login}</TableCell>
-              <TableCell component="a" target="_blank" href={row.html_url} align="right">{row.html_url}</TableCell>
-            </TableRow>
-          ))}
+          {!_isEmpty(users.data) &&
+            users.data.map(row => (
+              <TableRow key={row.login}>
+                <TableCell>
+                  <img alt="user-pic" className={classes.profilePic} src={row.avatar_url} />
+                </TableCell>
+                <TableCell align="right">{row.login}</TableCell>
+                <TableCell component="a" target="_blank" href={row.html_url} align="right">
+                  {row.html_url}
+                </TableCell>
+              </TableRow>
+            ))}
         </TableBody>
       </Table>
     </TableContainer>
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   users: _get(state, 'user', {
     isPending: false,
     isFulfilled: false,
@@ -53,7 +58,7 @@ const mapStateToProps = (state) => ({
   })
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   getUsers: () => dispatch(getUsers())
 });
 
